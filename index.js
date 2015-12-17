@@ -61,7 +61,7 @@ function transform(source) {
 
   source = source.split(first.original).join("var " + first.variable + " = {};");
   source = source.split("var fn = require;").join('');
-  source = source.split("require = utils;").join('');
+  source = source.split("require = " + first.variable + ";").join('');
   source = source.split("require = fn;").join('');
 
   results.forEach(function(ele) {
