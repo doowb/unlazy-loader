@@ -26,5 +26,21 @@
     "mocha": "*",
     "should": "*"
   },
-  "keywords": []
+  "keywords": [
+    "cache",
+    "lazy",
+    "lazy-cache",
+    "loader",
+    "loading",
+    "unlazy",
+    "webpack"
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "lazy-cache",
+        "webpack"
+      ]
+    }
+  }
 }
