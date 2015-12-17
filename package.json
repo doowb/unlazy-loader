@@ -19,7 +19,9 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "match-requires": "^1.0.0"
+  },
   "devDependencies": {
     "mocha": "*",
     "should": "*"
