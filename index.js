@@ -7,7 +7,7 @@
 
 'use strict';
 
-var match = require('match-requires');
+var regex = require('requires-regex');
 
 /**
  * Webpack loader used for transforming files that contain `lazy-cache` into files
@@ -19,18 +19,12 @@ var match = require('match-requires');
  * @name  `unlazy-loader`
  */
 
-module.exports = function(source) {
-  if (!isLazy(this.resource, source)) {
-    return source;
+module.exports = function(str) {
+  if (this && this.resource && !isLazy(this.resource, str)) {
+    return str;
   }
-  return transform(source);
+  return transform(str);
 };
-
-/**
- * Regex to determine if a file is using the `lazy-cache` module.
- */
-
-var re = /require\(['"]lazy-cache['"]\)/;
 
 /**
  * Determine if the source code contains lazy-cache.
@@ -41,7 +35,7 @@ var re = /require\(['"]lazy-cache['"]\)/;
  */
 
 function isLazy(fp, source) {
-  return (re.test(source) && fp.indexOf('lazy-cache') === -1);
+  return fp.indexOf('lazy-cache') === -1;
 }
 
 /**
@@ -51,46 +45,78 @@ function isLazy(fp, source) {
  * @return {String} Transformed source code.
  */
 
-function transform(source) {
-  var results = findRequires(source);
-  var first = results.filter(function(ele) {
-    return ele.module === 'lazy-cache';
-  })[0];
+function transform(str) {
+  str = str.split(/^lazy\(/gm).join('require(');
+  var lines = str.split(/\r\n|\n/);
+  var len = lines.length;
+  var re = regex();
+  var idx = 0;
 
-  if(!first) return source;
+  var start = false;
+  var isExported = false;
+  var namespace;
+  var res = '';
 
-  source = source.split(first.original).join("var " + first.variable + " = {};");
-  source = source.split("var fn = require;").join('');
-  source = source.split("require = " + first.variable + ";").join('');
-  source = source.split("require = fn;").join('');
+  while (idx < len) {
+    var line = lines[idx++];
+    res += '\n';
 
-  results.forEach(function(ele) {
-    if (ele.module === 'lazy-cache') return;
-    source = source
-      .split(ele.original)
-      .join(first.variable + "." + (ele.variable ? ele.variable : camelcase(ele.module)) + " = require('" + ele.module + "');");
-  });
+    if (/(?:var fn = require|require = utils)/.test(line)) {
+      continue;
+    }
+    if (/^require = fn/.test(line)) {
+      break;
+    }
 
-  return source;
+    var match = re.exec(line);
+    if (!match) {
+      res += line;
+      continue;
+    }
+
+    if (match && (match[2] === 'lazy-cache' || match[3] === 'lazy-cache')) {
+      namespace = toNamespace(match[1]);
+      if (/module\.exports/.test(match[1])) {
+        isExported = true;
+      }
+      line = 'var ' + namespace + ' = {};';
+      start = true;
+      res += line;
+      continue;
+    }
+
+    if (!start) {
+      res += line;
+      continue;
+    }
+
+    var variable = toVariable(match);
+    var prefix = toProperty(namespace, variable, match[2]);
+    line = line.split(match[0]).join(prefix);
+    res += line;
+  }
+
+  if (isExported) {
+    res += '\nmodule.exports = ' + namespace + ';';
+  }
+  return res.replace(/^\s+/, '');
 }
 
-/**
- * Find any require statements in the source file and return
- * an array of objects containing information about the line of code.
- *
- * @param  {String} `str` Source code to inspect.
- * @return {Array} Array of matching require statements.
- */
+function toVariable(match) {
+  return camelcase(match[3] || match[2]);
+}
 
-function findRequires(str) {
-  var results = match(str);
-  return results.map(function(ele) {
-    if (ele.module.indexOf(',') === -1) return ele;
-    var parts = ele.module.split(/['"],\s*['"]/);
-    ele.module = parts[0].trim();
-    ele.variable = parts[1].trim();
-    return ele;
-  });
+function toNamespace(str) {
+  str = str.replace(/var\s*/, '');
+  return str.split(/[^\w]/).shift();
+}
+
+function toProperty(namespace, prop, val) {
+  return namespace + '.' + prop + ' = ' + toRequire(val);
+}
+
+function toRequire(name) {
+  return 'require(\'' + name + '\');';
 }
 
 /**
@@ -101,6 +127,7 @@ function findRequires(str) {
  */
 
 function camelcase(str) {
+  if (!/[\s\W]/.test(str)) return str;
   if (str.length === 1) {
     return str.toLowerCase();
   }
