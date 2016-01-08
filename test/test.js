@@ -21,4 +21,8 @@ describe('unlazy', function() {
     assert.equal(unlazy(fixture('top.js')), actual('top.js'));
     assert.equal(unlazy(fixture('non-lazy.js')), actual('non-lazy.js'));
   });
+
+  it('should not unlazy a normal file require', function() {
+    assert.equal(unlazy(fixture('normal.js')), actual('normal.js'));
+  });
 });
