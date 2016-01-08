@@ -3,7 +3,7 @@
 > Webpack loader to transform lazy-cache files into unlazy cached files.
 
 ## Install
-Install with [npm](https://www.npmjs.com/):
+Install with [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm i unlazy-loader --save
@@ -36,8 +36,8 @@ that require modules directly.
 
 **Params**
 
-* `source` **{String}**: Source code to inspect.    
-* `returns` **{String}**: Transformed source code.  
+* `source` **{String}**: Source code to inspect.
+* `returns` **{String}**: Transformed source code.
 
 
 
