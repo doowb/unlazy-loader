@@ -65,7 +65,7 @@ function transform(str) {
       continue;
     }
     if (/^require = fn/.test(line)) {
-      break;
+      continue;
     }
 
     var match = re.exec(line);
