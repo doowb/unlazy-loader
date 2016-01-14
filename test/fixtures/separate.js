@@ -12,7 +12,7 @@ lazy('vinyl', 'File');
 var utils = lazy;
 
 utils.foo = function () {
-  
+
 };
 
 module.exports = utils;
