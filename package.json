@@ -4,6 +4,10 @@
   "version": "0.1.2",
   "homepage": "https://github.com/doowb/unlazy-loader",
   "author": "Brian Woodward (https://github.com/doowb)",
+  "contributors": [
+    "Brian Woodward (https://twitter.com/doowb)",
+    "Jon Schlinkert (http://twitter.com/jonschlinkert)"
+  ],
   "repository": "doowb/unlazy-loader",
   "bugs": {
     "url": "https://github.com/doowb/unlazy-loader/issues"

@@ -1,8 +1,8 @@
 /*!
  * unlazy-loader <https://github.com/doowb/unlazy-loader>
  *
- * Copyright (c) 2015, Brian Woodward.
- * Licensed under the MIT License.
+ * Copyright (c) 2015-present, Brian Woodward.
+ * Released under the MIT License.
  */
 
 'use strict';
