@@ -67,6 +67,10 @@ function transform(str) {
     if (/^require = fn/.test(line)) {
       continue;
     }
+    // adding this line to catch other variable names than the more specific cases above
+    if (/^require = (?:.*)/.test(line)) {
+      continue;
+    }
 
     var match = re.exec(line);
     if (!match) {
