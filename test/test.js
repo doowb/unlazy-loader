@@ -16,6 +16,7 @@ function actual(fp) {
 
 describe('unlazy', function() {
   it('should unlazy a lazy require', function() {
+    assert.equal(unlazy(fixture('ansi-colors.js')), actual('ansi-colors.js'));
     assert.equal(unlazy(fixture('bottom.js')), actual('bottom.js'));
     assert.equal(unlazy(fixture('many.js')), actual('many.js'));
     assert.equal(unlazy(fixture('markdown-toc.js')), actual('markdown-toc.js'));
