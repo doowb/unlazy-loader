@@ -1,7 +1,7 @@
 {
   "name": "unlazy-loader",
   "description": "Webpack loader to transform lazy-cache files into unlazy cached files.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/doowb/unlazy-loader",
   "author": "Brian Woodward (https://github.com/doowb)",
   "contributors": [
