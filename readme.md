@@ -20,7 +20,7 @@ var webpackConfig = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'unlazy'
+        loader: 'unlazy-loader'
       }
     ]
   }
